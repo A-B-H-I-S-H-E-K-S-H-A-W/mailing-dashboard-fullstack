@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles/globals.css";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
-import EmailBuilder from "./components/EmailBuilder";
 import SendEmail from "./pages/SendEmail";
 
 function App() {

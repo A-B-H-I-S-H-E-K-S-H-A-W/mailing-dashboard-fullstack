@@ -22,12 +22,17 @@ const data = {
   },
   navMain: [
     {
+      name: "Dashboard",
+      url: "/dashboard",
+      icon: Frame,
+    },
+    {
       name: "Send Email",
-      url: "#",
+      url: "/send-email",
       icon: Mail,
     },
     {
-      name: "Set Email Template",
+      name: "Choose Email Template",
       url: "#",
       icon: Frame,
     },

@@ -13,7 +13,9 @@ export default function DashboardPage({ children }) {
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset>{children}</SidebarInset>
+          <SidebarInset className="flex-1 overflow-auto">
+            {children}
+          </SidebarInset>
         </div>
       </SidebarProvider>
     </div>

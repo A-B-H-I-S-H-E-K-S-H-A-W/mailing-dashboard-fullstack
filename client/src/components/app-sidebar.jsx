@@ -33,7 +33,7 @@ const data = {
     },
     {
       name: "Choose Email Template",
-      url: "#",
+      url: "/list-email",
       icon: Frame,
     },
   ],

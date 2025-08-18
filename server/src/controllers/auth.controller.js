@@ -1,5 +1,7 @@
-import { User } from "../models/user.model.js";
+import { User, User } from "../models/user.model.js";
+import Decrypt from "../utils/Decrypt.js";
 import Encrypt from "../utils/Encrypt.js";
+import jwt from "jsonwebtoken";
 
 export async function register(req, res) {
   try {
@@ -35,4 +37,39 @@ export async function register(req, res) {
   } catch (error) {
     console.log("Error creating user ::::", error);
   }
+}
+
+export async function login(req, res) {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(404).json({
+        success: false,
+        message: "Email or password not found",
+      });
+    }
+
+    const User = await User.findOne({ email });
+
+    if (!User) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    const verifyPassword = await Decrypt(User.password, password);
+
+    if (!verifyPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Password did'nt match! Enter correct Password",
+      });
+    }
+
+    const token = jwt.sign({
+      
+    })
+  } catch (error) {}
 }

@@ -84,6 +84,10 @@ export async function login(req, res) {
       success: true,
       message: "User logged In",
       token,
+      admin: {
+        username: admin.username,
+        email: admin.email,
+      },
     });
   } catch (error) {
     console.error("User creation error:", error);

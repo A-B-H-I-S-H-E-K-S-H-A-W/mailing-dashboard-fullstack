@@ -1,10 +1,10 @@
-import zustand, { create } from "zustand";
+import { create } from "zustand";
 import axios from "axios";
 
-export const useUserStore = create({
+const useUserStore = create((set) => ({
   user: null,
   result: null,
-  login: async () => {
+  login: async (email, password) => {
     try {
       const res = await axios.post("/api/v1/auth/login", {
         email,
@@ -14,6 +14,9 @@ export const useUserStore = create({
       return res.data;
     } catch (error) {
       console.log("Error while login ::::", error.response?.data);
+      return error.response?.data;
     }
   },
-});
+}));
+
+export default useUserStore;

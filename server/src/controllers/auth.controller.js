@@ -1,5 +1,5 @@
 import { User } from "../models/user.model.js";
-import Encrypt from "../utils/Encrypt";
+import Encrypt from "../utils/Encrypt.js";
 
 export async function register(req, res) {
   try {
@@ -22,9 +22,9 @@ export async function register(req, res) {
     ];
 
     for (const u of users) {
-      const existingUsers = await User({ email: u.email });
+      const existingUser = await User({ email: u.email });
 
-      if (!existingUsers) {
+      if (!existingUser) {
         const hashedPassword = Encrypt(u.password);
         await User.create({ ...u, password: hashedPassword });
         console.log("User Created");

@@ -2,7 +2,9 @@ import { create } from "zustand";
 import axios from "axios";
 
 const useUserStore = create((set) => ({
+  token: null,
   user: null,
+  loading: false,
   result: null,
   login: async (email, password) => {
     try {
@@ -10,10 +12,12 @@ const useUserStore = create((set) => ({
         email,
         password,
       });
-      console.log(res.data);
+
+      set({ token: res.data.token });
+      localStorage.setItem("adminToken", res.data.token);
+
       return res.data;
     } catch (error) {
-      console.log("Error while login ::::", error.response?.data);
       return error.response?.data;
     }
   },

@@ -5,9 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useUserStore from "../store/store";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Loader from "./ui/Loader";
+import Alert from "./ui/Alert";
 
 export function LoginForm({ className, ...props }) {
   const login = useUserStore((state) => state.login);
+  const loading = useUserStore((state) => state.loading);
+  const [result, setResult] = useState({});
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,11 +25,19 @@ export function LoginForm({ className, ...props }) {
   };
 
   const handleSubmit = async () => {
-    console.log(formData.email, formData.password);
+    try {
+      useUserStore.setState({ loading: true });
+      const res = await login(formData.email, formData.password);
 
-    const res = await login(formData.email, formData.password);
-
-    console.log(res);
+      if (res.success) {
+        navigate("/dashboard");
+      }
+      setResult(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      useUserStore.setState({ loading: false });
+    }
   };
 
   return (
@@ -66,9 +80,15 @@ export function LoginForm({ className, ...props }) {
                     placeholder="****"
                     required
                   />
+                  <Alert result={result} />
                 </div>
-                <Button onClick={handleSubmit} type="submit" className="w-full">
-                  Login
+                <Button
+                  disabled={loading}
+                  onClick={handleSubmit}
+                  type="submit"
+                  className="w-full"
+                >
+                  {loading ? <Loader /> : "Login"}
                 </Button>
               </div>
             </div>

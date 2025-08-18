@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-const userSchema = Schema({
+const adminSchema = Schema({
   email: {
     type: String,
     lowercase: true,
@@ -17,4 +17,4 @@ const userSchema = Schema({
   },
 });
 
-export const User = model("User", userSchema);
+export const Admin = model("Admin", adminSchema);

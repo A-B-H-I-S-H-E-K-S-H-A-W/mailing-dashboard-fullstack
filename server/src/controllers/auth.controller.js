@@ -1,11 +1,11 @@
-import { User, User } from "../models/user.model.js";
+import { Admin } from "../models/admin.model.js";
 import Decrypt from "../utils/Decrypt.js";
 import Encrypt from "../utils/Encrypt.js";
 import jwt from "jsonwebtoken";
 
 export async function register(req, res) {
   try {
-    const users = [
+    const admins = [
       {
         username: process.env.AUTH_ROHIT_USERNAME,
         email: process.env.AUTH_ROHIT_EMAIL,
@@ -23,19 +23,19 @@ export async function register(req, res) {
       },
     ];
 
-    for (const u of users) {
-      const existingUser = await User.findOne({ email: u.email });
+    for (const u of admins) {
+      const existingAdmin = await Admin.findOne({ email: u.email });
 
-      if (!existingUser) {
+      if (!existingAdmin) {
         const hashedPassword = await Encrypt(u.password);
-        await User.create({ ...u, password: hashedPassword });
-        console.log("User Created");
+        await Admin.create({ ...u, password: hashedPassword });
+        console.log("Admin Created");
       } else {
-        console.log("User already exists");
+        console.log("Admin already exists");
       }
     }
   } catch (error) {
-    console.log("Error creating user ::::", error);
+    console.log("Error creating admin ::::", error);
   }
 }
 
@@ -50,16 +50,16 @@ export async function login(req, res) {
       });
     }
 
-    const User = await User.findOne({ email });
+    const admin = await Admin.findOne({ email });
 
-    if (!User) {
+    if (!admin) {
       return res.status(404).json({
         success: false,
-        message: "User not found!",
+        message: "Admin not found!",
       });
     }
 
-    const verifyPassword = await Decrypt(User.password, password);
+    const verifyPassword = await Decrypt(admin.password, password);
 
     if (!verifyPassword) {
       return res.status(400).json({
@@ -68,8 +68,28 @@ export async function login(req, res) {
       });
     }
 
-    const token = jwt.sign({
-      
-    })
-  } catch (error) {}
+    const token = jwt.sign(
+      {
+        id: admin._id,
+        email: admin.email,
+        username: admin.username,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN || "7d",
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "User logged In",
+      token,
+    });
+  } catch (error) {
+    console.error("User creation error:", error);
+    return res.status(500).json({
+      message: "Server error while admin login",
+      success: false,
+    });
+  }
 }

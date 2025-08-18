@@ -22,25 +22,17 @@ export async function register(req, res) {
     ];
 
     for (const u of users) {
-      const existingUser = await User({ email: u.email });
+      const existingUser = await User.findOne({ email: u.email });
 
       if (!existingUser) {
-        const hashedPassword = Encrypt(u.password);
+        const hashedPassword = await Encrypt(u.password);
         await User.create({ ...u, password: hashedPassword });
         console.log("User Created");
-        res.status(201).json({
-          success: true,
-          message: "User registered successfully",
-        });
       } else {
         console.log("User already exists");
       }
     }
   } catch (error) {
     console.log("Error creating user ::::", error);
-    res.status(500).json({
-      success: true,
-      message: "Internal Server Error",
-    });
   }
 }

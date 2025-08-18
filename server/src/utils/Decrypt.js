@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 
-async function Decrypt(password, userPassword) {
+async function Decrypt(userPassword, hashedPassword) {
   try {
-    const isMatch = await bcrypt.compare(password, userPassword);
+    const isMatch = await bcrypt.compare(userPassword, hashedPassword);
     return isMatch;
   } catch (error) {
-    console.log("Error in password decryption");
+    console.error("Error in password comparison:", error);
     throw error;
   }
 }

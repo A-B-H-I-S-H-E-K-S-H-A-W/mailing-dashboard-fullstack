@@ -6,10 +6,6 @@ configDotenv();
 
 const PORT = process.env.PORT || 8000;
 
-app.use("/", (req, res) => {
-  res.send("Hello World");
-});
-
 mongoDBConnection()
   .then((data) => {
     console.log("MONGO DB CONNECTION ESTABLISHED ::::", data.connection.host);

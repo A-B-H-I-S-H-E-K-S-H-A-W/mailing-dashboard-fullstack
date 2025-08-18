@@ -59,7 +59,7 @@ export async function login(req, res) {
       });
     }
 
-    const verifyPassword = await Decrypt(admin.password, password);
+    const verifyPassword = await Decrypt(password, admin.password);
 
     if (!verifyPassword) {
       return res.status(400).json({

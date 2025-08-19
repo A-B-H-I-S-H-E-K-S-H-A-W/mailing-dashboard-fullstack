@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "../components/ui/sonner";
 
 export const iframeHeight = "800px";
 
@@ -18,6 +19,7 @@ export default function DashboardPage({ children }) {
           </SidebarInset>
         </div>
       </SidebarProvider>
+      <Toaster />
     </div>
   );
 }

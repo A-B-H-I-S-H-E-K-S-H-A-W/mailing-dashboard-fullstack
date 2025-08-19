@@ -4,21 +4,46 @@ import EmailEditor from "react-email-editor";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "@/components/ui/label";
+import useEmailStore from "../store/emailStroe";
+import useUserStore from "../store/store";
+import { ToasterMain } from "../components/Toaster";
 
 const SendEmail = () => {
   const editorRef = useRef(null);
-
+  const sendEmail = useEmailStore((state) => state.sendEmail);
+  const user = useUserStore((state) => state.user);
   const [subject, setSubject] = useState("");
   const [recipient, setRecipient] = useState("");
   const [recipients, setRecipients] = useState([]);
 
-  const handleSubmit = () => {
-    editorRef.current.editor.exportHtml((data) => {
-      const { html } = data;
-      console.log("Email HTML:", html);
-      console.log("Recipients:", recipients);
-      console.log("Subject:", subject);
-    });
+  const handleSubmit = async () => {
+    try {
+      const html = await new Promise((resolve, reject) => {
+        editorRef.current.editor.exportHtml((data) => {
+          if (data?.html) {
+            resolve(data.html);
+          } else {
+            reject("Failed to export HTML");
+          }
+        });
+      });
+
+      const response = await sendEmail(
+        subject,
+        recipients,
+        html,
+        user?.username
+      );
+
+      ToasterMain(
+        response.results.message,
+        "Email sent Successfully",
+        response.results.success
+      );
+    } catch (error) {
+      console.log("Error sending email :::::", error);
+      ToasterMain("Failed to send email", "Error", false);
+    }
   };
 
   const addRecipient = () => {

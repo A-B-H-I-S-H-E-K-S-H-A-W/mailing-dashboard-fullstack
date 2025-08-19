@@ -30,30 +30,40 @@ function createTransporter(email, pass) {
   });
 }
 
-export async function sendOtpEmail(to, subject, html, adminName) {
-  if (!to || !adminName) {
-    throw new Error("Email and Admin Name are required");
+export async function sendAdminEmail(to, subject, html, adminName) {
+  try {
+    if (!to || !adminName) {
+      throw new Error("Email and Admin Name are required");
+    }
+
+    const selectedAdmin = admins[adminName];
+    if (!selectedAdmin) {
+      throw new Error(`Invalid admin: ${adminName}`);
+    }
+
+    let transporter = createTransporter(
+      selectedAdmin.email,
+      selectedAdmin.password
+    );
+
+    const emailOptions = {
+      from: `"${adminName}" <${selectedAdmin.email}>`,
+      to,
+      subject,
+      html,
+    };
+
+    const info = await transporter.sendMail(emailOptions);
+
+    return {
+      message: `Email sent successfully to ${to}`,
+      success: true,
+    };
+  } catch (error) {
+    console.log("Error sending email ::::", error);
+    return {
+      message: `Failed to send email`,
+      success: false,
+    };
   }
-
-  const selectedAdmin = admins[adminName];
-  if (!selectedAdmin) {
-    throw new Error(`Invalid admin: ${adminName}`);
-  }
-
-  let transporter = null;
-
-  const emailOptions = {
-    from: `"${adminName}" <${selectedAdmin.email}>`,
-    to,
-    subject,
-    html,
-  };
-
-  const info = await transporter.sendMail(emailOptions);
-  console.log(`Email sent to ${to}`, info);
-
-  return {
-    message: `Email sent successfully to ${to}`,
-    success: true,
-  };
 }

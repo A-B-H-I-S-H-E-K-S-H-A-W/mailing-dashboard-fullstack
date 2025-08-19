@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Frame, Mail, Settings } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
@@ -13,40 +12,43 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      name: "Dashboard",
-      url: "/dashboard",
-      icon: Frame,
-    },
-    {
-      name: "Send Email",
-      url: "/send-email",
-      icon: Mail,
-    },
-    {
-      name: "Choose Email Template",
-      url: "/list-email",
-      icon: Frame,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings,
-    },
-  ],
-};
+import useUserStore from "../store/store";
 
 export function AppSidebar({ ...props }) {
+  const user = useUserStore((state) => state.user);
+
+  const data = {
+    user: {
+      name: user?.username,
+      email: user?.email,
+      avatar: "/avatars/shadcn.jpg",
+    },
+    navMain: [
+      {
+        name: "Dashboard",
+        url: "/dashboard",
+        icon: Frame,
+      },
+      {
+        name: "Send Email",
+        url: "/send-email",
+        icon: Mail,
+      },
+      {
+        name: "Choose Email Template",
+        url: "/list-email",
+        icon: Frame,
+      },
+    ],
+    navSecondary: [
+      {
+        title: "Settings",
+        url: "#",
+        icon: Settings,
+      },
+    ],
+  };
+
   return (
     <Sidebar
       className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"

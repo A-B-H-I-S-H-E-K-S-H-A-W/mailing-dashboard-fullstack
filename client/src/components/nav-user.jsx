@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { DialogBox } from "./dialog-box";
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
@@ -68,10 +69,7 @@ export function NavUser({ user }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <DialogBox />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

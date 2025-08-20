@@ -3,7 +3,6 @@ import DashboardPage from "./DashboardPage";
 
 const LogsPage = () => {
   const results = useEmailStore((state) => state.results);
-  console.log(results);
 
   return (
     <>
@@ -21,7 +20,13 @@ const LogsPage = () => {
                 </h4>
                 <p className="text-base text-primary">
                   <span className="text-foreground">Message:</span>{" "}
-                  {item.message}
+                  <span
+                    className={`${
+                      item.success ? "text-green-400" : "text-destructive"
+                    }`}
+                  >
+                    {item.message}
+                  </span>
                 </p>
               </div>
             ))}

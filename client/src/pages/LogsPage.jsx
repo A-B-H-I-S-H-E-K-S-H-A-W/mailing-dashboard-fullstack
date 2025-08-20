@@ -10,19 +10,21 @@ const LogsPage = () => {
         <div className="p-5">
           <h1 className="text-4xl font-bold pb-10">All send emails logs</h1>
           <div className="flex flex-col w-full min-h-40">
-            {results.map((item) => (
+            {results === null && <div>No Email Logs</div>}
+
+            {results?.map((item) => (
               <div
-                key={item.recipient}
+                key={item?.recipient}
                 className="text-foreground border-4 p-4 rounded-2xl"
               >
                 <h4 className="text-xl font-semibold mb-3">
-                  Recipient: {item.recipient}
+                  Recipient: {item?.recipient}
                 </h4>
                 <p className="text-base text-primary">
                   <span className="text-foreground">Message:</span>{" "}
                   <span
                     className={`${
-                      item.success ? "text-green-400" : "text-destructive"
+                      item?.success ? "text-green-400" : "text-destructive"
                     }`}
                   >
                     {item.message}

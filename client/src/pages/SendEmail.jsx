@@ -13,6 +13,7 @@ import Loader from "../components/ui/Loader";
 const SendEmail = () => {
   const editorRef = useRef(null);
   const sendEmail = useEmailStore((state) => state.sendEmail);
+  const saveEmail = useEmailStore((state) => state.saveEmail);
   const results = useEmailStore((state) => state.results);
   const user = useUserStore((state) => state.user);
   const loading = useUserStore((state) => state.loading);
@@ -41,14 +42,64 @@ const SendEmail = () => {
         user?.username
       );
 
-      ToasterMain(
-        response.message,
-        "Email sent Successfully",
-        response.success,
-        "/logs",
-        navigate
-      );
+      if (response.success) {
+        ToasterMain(
+          response.message,
+          "Email sent Successfully",
+          response.success,
+          "/logs",
+          navigate
+        );
+      } else {
+        ToasterMain(
+          response.message,
+          "Falied to send email",
+          response.success,
+          "/logs",
+          navigate
+        );
+      }
       console.log(results);
+    } catch (error) {
+      console.log("Error sending email :::::", error);
+      ToasterMain("Failed to send email", "Error", false);
+    } finally {
+      useUserStore.setState({ loading: false });
+    }
+  };
+
+  const handleSaveEmail = async () => {
+    try {
+      useUserStore.setState({ loading: false });
+      const html = await new Promise((resolve, reject) => {
+        editorRef.current.editor.exportHtml((data) => {
+          if (data?.html) {
+            resolve(data.html);
+          } else {
+            reject("Failed to export HTML");
+          }
+        });
+      });
+
+      const response = await saveEmail(html);
+
+      if (response.success) {
+        ToasterMain(
+          response.message,
+          "Email saved successfully",
+          response.success,
+          "/list-email",
+          navigate
+        );
+      } else {
+        ToasterMain(
+          response.message,
+          "Email didn't saved",
+          response.success,
+          "/list-email",
+          navigate
+        );
+      }
     } catch (error) {
       console.log("Error sending email :::::", error);
       ToasterMain("Failed to send email", "Error", false);
@@ -138,7 +189,9 @@ const SendEmail = () => {
 
           {/* Buttons */}
           <div className="flex gap-3 self-end pt-10">
-            <Button variant="outline">Save Email Template</Button>
+            <Button onClick={handleSaveEmail} variant="outline">
+              {loading ? <Loader /> : "Save Email Template"}
+            </Button>
             <Button onClick={handleSubmit}>
               {loading ? <Loader /> : "Send Email"}
             </Button>

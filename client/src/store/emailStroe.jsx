@@ -26,6 +26,23 @@ const useEmailStore = create(
           return error.response?.data;
         }
       },
+      saveEmail: async (html) => {
+        try {
+          const res = await axios.post("/api/v1/email/create", {
+            html,
+          });
+
+          if (res.data.success) {
+            console.log("Email saved successfully");
+            return res.data;
+          } else {
+            console.log("Error saving email");
+            return res.data;
+          }
+        } catch (error) {
+          return error.response?.data;
+        }
+      },
     }),
     { name: "email-storage" }
   )

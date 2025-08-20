@@ -6,6 +6,7 @@ const useEmailStore = create(
   persist(
     (set) => ({
       results: null,
+      loadingEmail: false,
       sendEmail: async (subject, to, html, admin) => {
         try {
           const res = await axios.post("/api/v1/email/send-email", {
@@ -30,6 +31,7 @@ const useEmailStore = create(
         try {
           const res = await axios.post("/api/v1/email/create", {
             html,
+            title,
           });
 
           if (res.data.success) {

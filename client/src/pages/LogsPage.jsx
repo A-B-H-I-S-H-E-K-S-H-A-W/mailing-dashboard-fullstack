@@ -9,6 +9,7 @@ const LogsPage = () => {
     <>
       <DashboardPage>
         <div className="p-5">
+          <h1 className="text-4xl font-bold pb-10">All send emails logs</h1>
           <div className="flex flex-col w-full min-h-40">
             {results.map((item) => (
               <div

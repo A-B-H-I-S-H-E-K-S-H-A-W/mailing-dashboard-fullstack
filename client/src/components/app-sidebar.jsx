@@ -1,4 +1,4 @@
-import { Frame, Mail, Settings } from "lucide-react";
+import { Frame, List, Mail, Settings } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -38,6 +38,11 @@ export function AppSidebar({ ...props }) {
         name: "Choose Email Template",
         url: "/list-email",
         icon: Frame,
+      },
+      {
+        name: "Current Email Logs",
+        url: "/logs",
+        icon: List,
       },
     ],
     navSecondary: [

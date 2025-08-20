@@ -12,7 +12,7 @@ const useUserStore = create(
 
       login: async (email, password) => {
         try {
-          const res = await axios.post("/api/v1/auth/login", {
+          const res = await axios.post(`${API_BASE}/api/v1/auth/login`, {
             email,
             password,
           });

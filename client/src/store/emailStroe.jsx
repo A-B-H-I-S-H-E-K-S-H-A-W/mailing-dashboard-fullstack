@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import { persist } from "zustand/middleware";
+import { API_BASE } from "../constants/ApiUrl";
 
 const useEmailStore = create(
   persist(
@@ -9,7 +10,7 @@ const useEmailStore = create(
       loadingEmail: false,
       sendEmail: async (subject, to, html, admin) => {
         try {
-          const res = await axios.post("/api/v1/email/send-email", {
+          const res = await axios.post(`${API_BASE}/api/v1/email/send-email`, {
             subject,
             to,
             html,
@@ -29,7 +30,7 @@ const useEmailStore = create(
       },
       saveEmail: async (html) => {
         try {
-          const res = await axios.post("/api/v1/email/create", {
+          const res = await axios.post(`${API_BASE}/api/v1/email/create`, {
             html,
             title,
           });

@@ -10,7 +10,7 @@ const emailSchema = Schema({
     required: true,
   },
   owner: {
-    type: "",
+    type: String,
   },
 });
 

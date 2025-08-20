@@ -7,7 +7,7 @@ export const app = express();
 
 app.use(
   cors({
-    origin: "https://mailing-dashboard.vercel.app/",
+    origin: "https://mailing-dashboard.vercel.app",
   })
 );
 app.use(express.json());

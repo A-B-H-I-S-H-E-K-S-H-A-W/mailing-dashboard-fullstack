@@ -75,3 +75,26 @@ export async function createEmail(req, res) {
     });
   }
 }
+
+export async function fetchEmail(req, res) {
+  try {
+    const emailData = await Email.find();
+
+    if (!emailData) {
+      return res.status(404).json({
+        success: false,
+        message: "No email data found",
+      });
+    }
+
+    return res.status(200).json({
+      emailData,
+    });
+  } catch (error) {
+    console.log("Error creating email data ::::", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}

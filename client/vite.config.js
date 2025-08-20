@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://mailing-dashboard-backend.onrender.com/",
+        target: "https://mailing-dashboard-backend.onrender.com",
         changeOrigin: true,
         secure: false,
       },

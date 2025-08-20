@@ -5,7 +5,11 @@ import { emailRouter } from "./routes/email.routes.js";
 
 export const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://mailing-dashboard.vercel.app/",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/v1/auth", authRouter);

@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import axios from "axios";
 import { persist } from "zustand/middleware";
+import { API_BASE } from "../constants/ApiUrl";
 
 const useUserStore = create(
   persist(
     (set) => ({
       token: null,
       user: null,
-      loading: false,
+      loading: null,
       result: null,
 
       login: async (email, password) => {

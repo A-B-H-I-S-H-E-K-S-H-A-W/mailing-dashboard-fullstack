@@ -29,7 +29,7 @@ export function LoginForm({ className, ...props }) {
       useUserStore.setState({ loading: true });
       const res = await login(formData.email, formData.password);
 
-      if (res.success) {
+      if (res?.success) {
         navigate("/dashboard");
       }
       setResult(res);

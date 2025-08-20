@@ -8,12 +8,14 @@ import useEmailStore from "../store/emailStroe";
 import useUserStore from "../store/store";
 import { ToasterMain } from "../components/Toaster";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/ui/Loader";
 
 const SendEmail = () => {
   const editorRef = useRef(null);
   const sendEmail = useEmailStore((state) => state.sendEmail);
   const results = useEmailStore((state) => state.results);
   const user = useUserStore((state) => state.user);
+  const loading = useUserStore((state) => state.loading);
   const [subject, setSubject] = useState("");
   const [recipient, setRecipient] = useState("");
   const [recipients, setRecipients] = useState([]);
@@ -21,6 +23,7 @@ const SendEmail = () => {
 
   const handleSubmit = async () => {
     try {
+      useUserStore.setState({ loading: true });
       const html = await new Promise((resolve, reject) => {
         editorRef.current.editor.exportHtml((data) => {
           if (data?.html) {
@@ -49,6 +52,8 @@ const SendEmail = () => {
     } catch (error) {
       console.log("Error sending email :::::", error);
       ToasterMain("Failed to send email", "Error", false);
+    } finally {
+      useUserStore.setState({ loading: false });
     }
   };
 
@@ -134,7 +139,9 @@ const SendEmail = () => {
           {/* Buttons */}
           <div className="flex gap-3 self-end pt-10">
             <Button variant="outline">Save Email Template</Button>
-            <Button onClick={handleSubmit}>Send Email</Button>
+            <Button onClick={handleSubmit}>
+              {loading ? <Loader /> : "Send Email"}
+            </Button>
           </div>
         </div>
       </DashboardPage>

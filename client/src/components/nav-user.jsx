@@ -1,20 +1,11 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -25,10 +16,19 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { DialogBox } from "./dialog-box";
+import { ConfirmDialog } from "./dialog-box";
+import { useNavigate } from "react-router-dom";
+import useUserStore from "../store/store";
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
+  const logout = useUserStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <SidebarMenu>
@@ -69,7 +69,15 @@ export function NavUser({ user }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DialogBox />
+            <ConfirmDialog
+              title={"Warning"}
+              description={"Do you really want to logout"}
+              confirmLable="Logout"
+              confirmVarient="destructive"
+              triggerLabel={"Log out"}
+              triggerIcon={LogOut}
+              onConfirm={handleLogout}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

@@ -5,7 +5,7 @@ import { persist } from "zustand/middleware";
 const useEmailStore = create(
   persist(
     (set) => ({
-      result: null,
+      results: null,
       sendEmail: async (subject, to, html, admin) => {
         try {
           const res = await axios.post("/api/v1/email/send-email", {
@@ -16,6 +16,7 @@ const useEmailStore = create(
           });
 
           if (res.data.success) {
+            set({ results: res.data.results });
             console.log(res.data);
           } else {
             console.log("No success");

@@ -1,15 +1,21 @@
-"use client";
-
 import { toast } from "sonner";
 
-export function ToasterMain(message, title, success = true, showToast = true) {
+export function ToasterMain(
+  message,
+  title,
+  success = true,
+  redirectTo,
+  navigate,
+  showToast = true
+) {
   if (showToast) {
     toast(title, {
       className: `${success ? "bg-secondary" : "bg-destructive"}`,
       description: message,
+      duration: 8000,
       action: {
-        label: "Close",
-        onClick: () => console.log("CLOSE"),
+        label: "Show logs",
+        onClick: () => navigate(redirectTo),
       },
     });
   }

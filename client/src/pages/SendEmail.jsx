@@ -7,14 +7,17 @@ import { Label } from "@/components/ui/label";
 import useEmailStore from "../store/emailStroe";
 import useUserStore from "../store/store";
 import { ToasterMain } from "../components/Toaster";
+import { useNavigate } from "react-router-dom";
 
 const SendEmail = () => {
   const editorRef = useRef(null);
   const sendEmail = useEmailStore((state) => state.sendEmail);
+  const results = useEmailStore((state) => state.results);
   const user = useUserStore((state) => state.user);
   const [subject, setSubject] = useState("");
   const [recipient, setRecipient] = useState("");
   const [recipients, setRecipients] = useState([]);
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     try {
@@ -36,10 +39,13 @@ const SendEmail = () => {
       );
 
       ToasterMain(
-        response.results.message,
+        response.message,
         "Email sent Successfully",
-        response.results.success
+        response.success,
+        "/logs",
+        navigate
       );
+      console.log(results);
     } catch (error) {
       console.log("Error sending email :::::", error);
       ToasterMain("Failed to send email", "Error", false);

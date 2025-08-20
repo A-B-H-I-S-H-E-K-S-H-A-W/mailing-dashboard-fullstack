@@ -5,6 +5,7 @@ import DashboardPage from "./pages/DashboardPage";
 import SendEmail from "./pages/SendEmail";
 import { ListEmail } from "./pages/ListEmail";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import LogsPage from "./pages/LogsPage";
 
 function App() {
   return (
@@ -33,6 +34,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ListEmail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/logs"
+            element={
+              <ProtectedRoute>
+                <LogsPage />
               </ProtectedRoute>
             }
           />

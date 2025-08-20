@@ -43,7 +43,7 @@ export async function sendEmail(req, res) {
 
 export async function createEmail(req, res) {
   try {
-    const { html } = req.body;
+    const { html, title } = req.body;
 
     if (!html) {
       return res.status(404).json({
@@ -54,14 +54,14 @@ export async function createEmail(req, res) {
 
     const allEmails = await Email.countDocuments();
 
-    if (allEmails > 5) {
+    if (allEmails >= 5) {
       return res.status(400).json({
         success: false,
         message: "You have exceeded the saved emails",
       });
     }
 
-    const emailData = await Email.create({ html });
+    const emailData = await Email.create({ html, title });
 
     return res.status(201).json({
       success: true,

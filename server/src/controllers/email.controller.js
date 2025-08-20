@@ -1,3 +1,4 @@
+import { Email } from "../models/email.model.js";
 import { sendAdminEmail } from "../services/emailAdmin.js";
 
 export async function sendEmail(req, res) {
@@ -7,7 +8,7 @@ export async function sendEmail(req, res) {
     if (!Array.isArray(to) || to.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "Recipients list is required and must be an array",
+        message: "Recipients list is required!",
       });
     }
 
@@ -34,6 +35,41 @@ export async function sendEmail(req, res) {
   } catch (error) {
     console.error("Error sending email", error);
     return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
+export async function createEmail(req, res) {
+  try {
+    const { html } = req.body;
+
+    if (!html) {
+      return res.status(404).json({
+        success: false,
+        message: "Email body not found",
+      });
+    }
+
+    const allEmails = await Email.countDocuments();
+
+    if (allEmails > 5) {
+      return res.status(400).json({
+        success: false,
+        message: "You have exceeded the saved emails",
+      });
+    }
+
+    const emailData = await Email.create({ html });
+
+    return res.status(201).json({
+      success: true,
+      message: "Email saved successfully",
+    });
+  } catch (error) {
+    console.log("Error creating email data ::::", error);
+    res.status(500).json({
       success: false,
       message: "Internal server error",
     });

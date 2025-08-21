@@ -14,6 +14,14 @@ const useUserStore = create(
       login: async (email, password) => {
         set({ loading: true, result: null });
 
+        setTimeout(() => {
+          set({ loading: false, result: null });
+          return {
+            success: false,
+            message: "Error",
+          };
+        }, 10000);
+
         try {
           if (!email || !password) {
             set({ loading: false });

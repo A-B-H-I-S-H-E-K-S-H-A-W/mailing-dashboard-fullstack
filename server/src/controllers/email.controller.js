@@ -45,6 +45,8 @@ export async function createEmail(req, res) {
   try {
     const { html, title } = req.body;
 
+    const userId = req.user.id;
+
     if (!html) {
       return res.status(404).json({
         success: false,
@@ -52,16 +54,19 @@ export async function createEmail(req, res) {
       });
     }
 
-    const allEmails = await Email.countDocuments();
+    const emailCount = await Email.countDocuments({ admin: userId });
 
-    if (allEmails >= 5) {
+    if (emailCount >= 5) {
       return res.status(400).json({
         success: false,
         message: "You have exceeded the saved emails",
       });
     }
 
-    const emailData = await Email.create({ html, title });
+    const emailData = await Email.create({ html, title, admin: userId });
+
+    console.log(emailData);
+    console.log(userId);
 
     return res.status(201).json({
       success: true,

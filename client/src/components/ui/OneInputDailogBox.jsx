@@ -40,17 +40,17 @@ export function OneInputDailogBox({ editorRef }) {
 
       if (response.success) {
         ToasterMain(
-          response.message,
+          response?.message,
           "Email saved successfully",
-          response.success,
+          response?.success,
           "/list-email",
           navigate
         );
       } else {
         ToasterMain(
-          response.message,
+          response?.message,
           "Email not saved",
-          response.success,
+          response?.success,
           "/list-email",
           navigate
         );

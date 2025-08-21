@@ -47,17 +47,17 @@ const SendEmail = () => {
 
       if (response.success) {
         ToasterMain(
-          response.message,
+          response?.message,
           "Email sent Successfully",
-          response.success,
+          response?.success,
           "/logs",
           navigate
         );
       } else {
         ToasterMain(
-          response.message,
+          response?.message,
           "Falied to send email",
-          response.success,
+          response?.success,
           "/logs",
           navigate
         );

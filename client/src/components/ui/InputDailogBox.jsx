@@ -11,8 +11,8 @@ export function InputDailogBox({ open, setOpen, emailData }) {
       const response = await sendEmail(
         subject,
         recipients,
-        emailData?.html, // <-- html from clicked row
-        emailData?.title // <-- title from clicked row
+        emailData?.html,
+        emailData?.title
       );
 
       if (response.success) {
@@ -37,7 +37,7 @@ export function InputDailogBox({ open, setOpen, emailData }) {
       ToasterMain("Failed to send email", "Error", false);
     } finally {
       useUserStore.setState({ loading: false });
-      setOpen(false); // close dialog after sending
+      setOpen(false);
     }
   };
 

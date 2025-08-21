@@ -19,7 +19,7 @@ const useUserStore = create(
             set({ loading: false });
             return {
               success: false,
-              message: "Fields can't be empty",
+              message: "Email or password not found",
             };
           }
 

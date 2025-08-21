@@ -13,12 +13,19 @@ import {
 import { Button } from "./button";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "./input";
+import useEmailStore from "../../store/emailStroe";
+import { ToasterMain } from "../Toaster";
+import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 
 export function InputDailogBox({ emailData }) {
   const loading = useUserStore((state) => state.loading);
+  const sendEmail = useEmailStore((state) => state.sendEmail);
+  const user = useUserStore((state) => state.user);
   const [subject, setSubject] = useState("");
   const [recipient, setRecipient] = useState("");
   const [recipients, setRecipients] = useState([]);
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     try {
@@ -28,7 +35,7 @@ export function InputDailogBox({ emailData }) {
         subject,
         recipients,
         emailData?.html,
-        emailData?.title
+        user.username
       );
 
       if (response.success) {
@@ -53,7 +60,6 @@ export function InputDailogBox({ emailData }) {
       ToasterMain("Failed to send email", "Error", false);
     } finally {
       useUserStore.setState({ loading: false });
-      setOpen(false);
     }
   };
 

@@ -26,7 +26,6 @@ export function LoginForm({ className, ...props }) {
 
   const handleSubmit = async () => {
     try {
-      useUserStore.setState({ loading: true });
       const res = await login(formData.email, formData.password);
 
       if (res?.success) {
@@ -35,8 +34,6 @@ export function LoginForm({ className, ...props }) {
       setResult(res);
     } catch (error) {
       console.log(error);
-    } finally {
-      useUserStore.setState({ loading: false });
     }
   };
 

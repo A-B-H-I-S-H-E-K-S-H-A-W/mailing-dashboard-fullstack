@@ -8,26 +8,47 @@ const useUserStore = create(
     (set) => ({
       token: null,
       user: null,
-      loading: null,
+      loading: false,
       result: null,
 
       login: async (email, password) => {
+        set({ loading: true, result: null });
+
         try {
+          if (!email || !password) {
+            set({ loading: false });
+            return {
+              success: false,
+              message: "Fields can't be empty",
+            };
+          }
+
           const res = await axios.post(`${API_BASE}/api/v1/auth/login`, {
             email,
             password,
           });
-          set({ token: res.data.token, user: res.data.admin });
+
+          set({
+            token: res.data.token,
+            user: res.data.admin,
+            loading: false,
+          });
+
           localStorage.setItem("adminToken", res.data.token);
           return res.data;
         } catch (error) {
+          set({
+            loading: false,
+          });
           return error.response?.data;
+        } finally {
+          clearTimeout(timeout); // prevent auto-reset if already handled
         }
       },
 
       logout: () => {
         localStorage.removeItem("adminToken");
-        set({ token: null, user: null });
+        set({ token: null, user: null, result: null });
       },
     }),
     { name: "user-storage" }

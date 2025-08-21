@@ -20,6 +20,8 @@ export function ConfirmDialog({
   cancelLabel = "Cancel",
   confirmVariant = "destructive",
   onConfirm,
+  loading,
+  Loader,
 }) {
   return (
     <Dialog>
@@ -39,7 +41,7 @@ export function ConfirmDialog({
             <Button variant="outline">{cancelLabel}</Button>
           </DialogClose>
           <Button onClick={onConfirm} variant={confirmVariant} type="button">
-            {confirmLabel}
+            {loading ? <Loader /> : { confirmLabel }}
           </Button>
         </DialogFooter>
       </DialogContent>

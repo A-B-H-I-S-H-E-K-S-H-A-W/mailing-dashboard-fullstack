@@ -6,10 +6,13 @@ import { ConfirmDialog } from "../components/dialog-box";
 import { Trash2 } from "lucide-react";
 import { ToasterMain } from "../components/Toaster";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../store/store";
+import Loader from "../components/ui/Loader";
 
 export function ListEmail() {
   const [data, setData] = useState(null);
   const fetchEmail = useEmailStore((state) => state.fetchEmail);
+  const loading = useUserStore((state) => state.loading);
   const deleteEmail = useEmailStore((state) => state.deleteEmail);
   const navigate = useNavigate();
 
@@ -30,6 +33,7 @@ export function ListEmail() {
 
   const handleDelete = async (id) => {
     try {
+      useUserStore.setState({ loading: true });
       const response = await deleteEmail(id);
 
       if (response.success) {
@@ -54,6 +58,8 @@ export function ListEmail() {
     } catch (error) {
       console.log("Error deleting email :::::", error);
       ToasterMain("Failed to delete email", "Error", false);
+    } finally {
+      useUserStore.setState({ loading: false });
     }
   };
 
@@ -107,6 +113,8 @@ export function ListEmail() {
                           variant="destructive"
                           triggerIcon={Trash2}
                           onConfirm={() => handleDelete(row._id)}
+                          loading={loading}
+                          Loader={Loader}
                         />
                       </td>
                     </tr>

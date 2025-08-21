@@ -1,4 +1,20 @@
-export function InputDailogBox({ open, setOpen, emailData }) {
+import { useState } from "react";
+import useUserStore from "../../store/store";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "./button";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { Input } from "./input";
+
+export function InputDailogBox({ emailData }) {
   const loading = useUserStore((state) => state.loading);
   const [subject, setSubject] = useState("");
   const [recipient, setRecipient] = useState("");
@@ -42,7 +58,10 @@ export function InputDailogBox({ open, setOpen, emailData }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Send Email</Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Send Email - {emailData?.title}</DialogTitle>
@@ -56,6 +75,7 @@ export function InputDailogBox({ open, setOpen, emailData }) {
             <Label htmlFor="subject">Subject</Label>
             <Input
               id="subject"
+              name="subject"
               type="text"
               placeholder="Enter email subject"
               value={subject}
@@ -91,14 +111,14 @@ export function InputDailogBox({ open, setOpen, emailData }) {
             {recipients.map((email, idx) => (
               <span
                 key={idx}
-                className="flex items-center bg-gray-200 px-2 py-1 rounded-full text-sm"
+                className="flex items-center bg-accent px-2 py-1 rounded-full text-sm"
               >
                 {email}
                 <button
                   onClick={() =>
                     setRecipients(recipients.filter((r) => r !== email))
                   }
-                  className="ml-2 text-red-500 hover:text-red-700"
+                  className="ml-2 text-destructive hover:text-destructive"
                 >
                   ✕
                 </button>

@@ -1,3 +1,4 @@
+import { Admin } from "../models/admin.model.js";
 import { Email } from "../models/email.model.js";
 import { sendAdminEmail } from "../services/emailAdmin.js";
 
@@ -83,20 +84,49 @@ export async function createEmail(req, res) {
 
 export async function fetchEmail(req, res) {
   try {
-    const emailData = await Email.find();
+    const adminId = req.user.id;
 
-    if (!emailData) {
+    if (!adminId) {
       return res.status(404).json({
         success: false,
         message: "No email data found",
       });
     }
 
+    const emailData = await Email.find({ admin: adminId });
+
     return res.status(200).json({
+      success: true,
       emailData,
     });
   } catch (error) {
-    console.log("Error creating email data ::::", error);
+    console.log("Error fetching email data ::::", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
+export async function deleteEmail(req, res) {
+  try {
+    const { id } = req.body;
+
+    const response = await Email.findByIdAndDelete(id);
+
+    if (!response) {
+      return res.status(404).json({
+        success: false,
+        message: "Email not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Email deleted successfully",
+    });
+  } catch (error) {
+    console.log("Error fetching email data ::::", error);
     res.status(500).json({
       success: false,
       message: "Internal server error",

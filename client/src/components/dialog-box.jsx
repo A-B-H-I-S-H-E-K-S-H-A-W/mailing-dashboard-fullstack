@@ -12,6 +12,7 @@ import {
 
 export function ConfirmDialog({
   triggerLabel,
+  variant = "outline",
   triggerIcon: TriggerIcon,
   title = "Confirm Action",
   description = "Are you sure you want to proceed?",
@@ -23,7 +24,7 @@ export function ConfirmDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant={variant}>
           {TriggerIcon && <TriggerIcon className="mr-2" />}
           {triggerLabel}
         </Button>

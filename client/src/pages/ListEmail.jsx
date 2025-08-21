@@ -1,157 +1,124 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import useEmailStore from "../store/emailStroe";
 import DashboardPage from "./DashboardPage";
-import { InputDailogBox } from "../components/ui/InputDailogBox"; // import dialog
-
-export const columns = [
-  {
-    accessorKey: "title",
-    header: "Title",
-    cell: ({ row }) => <div>{row.getValue("title")}</div>,
-  },
-  {
-    accessorKey: "html",
-    header: "Html",
-    cell: ({ row }) => <div>{row.getValue("html")}</div>,
-  },
-];
+import { InputDailogBox } from "../components/ui/InputDailogBox";
+import { ConfirmDialog } from "../components/dialog-box";
+import { Trash2 } from "lucide-react";
+import { ToasterMain } from "../components/Toaster";
+import { useNavigate } from "react-router-dom";
 
 export function ListEmail() {
-  const [data, setData] = useState([]);
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [sorting, setSorting] = useState([]);
+  const [data, setData] = useState(null);
+  const fetchEmail = useEmailStore((state) => state.fetchEmail);
+  const deleteEmail = useEmailStore((state) => state.deleteEmail);
+  const navigate = useNavigate();
 
-  const [selectedEmail, setSelectedEmail] = useState(null);
-
-  const fetchEmails = async () => {
+  const fetchEmailData = async () => {
     try {
-      const res = await fetch("/api/v1/email/list");
-      const result = await res.json();
+      const response = await fetchEmail();
 
-      if (result.success) {
-        const mapped = result.emails.map((e) => ({
-          title: e.title,
-          html: e.html,
-        }));
-        setData(mapped);
+      if (response.success) {
+        setData(response.emailData);
+      } else {
+        console.log("Error fetching data");
       }
-    } catch (err) {
-      console.error("Failed to fetch emails", err);
+    } catch (error) {
+      console.log("Error fetching email :::::", error);
+      ToasterMain("Failed to fetch email", "Error", false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteEmail(id);
+
+      if (response.success) {
+        ToasterMain(
+          response?.message,
+          "Email deleted successfully",
+          response?.success,
+          "/list-email",
+          navigate
+        );
+
+        fetchEmailData();
+      } else {
+        ToasterMain(
+          response?.message,
+          "Can't delete email",
+          response?.success,
+          "/list-email",
+          navigate
+        );
+      }
+    } catch (error) {
+      console.log("Error deleting email :::::", error);
+      ToasterMain("Failed to delete email", "Error", false);
     }
   };
 
   useEffect(() => {
-    fetchEmails();
+    fetchEmailData();
   }, []);
-
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-    },
-  });
 
   return (
     <DashboardPage>
-      <div className="w-full p-5">
-        {/* Filter */}
-        <div className="flex items-center py-4">
-          <Input
-            placeholder="Filter emails..."
-            value={table.getColumn("title")?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-        </div>
-
-        {/* Table */}
-        <div className="overflow-hidden rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    className="cursor-pointer hover:bg-gray-100"
-                    onClick={() => setSelectedEmail(row.original)} // <-- open dialog on click
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
+      <div className="p-4">
+        <div className="overflow-x-auto rounded-lg shadow">
+          <table className="min-w-full bg-background">
+            <thead className="bg-accent">
+              <tr>
+                <th className="px-8 py-6 text-left">Title</th>
+                <th className="px-8 py-6 text-left">Html</th>
+                <th className="px-8 py-6 text-center">Send Email</th>
+                <th className="px-8 py-6 text-center">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {!data || data.length === 0 ? (
+                <>
+                  <tr className="border-t hover:bg-accent transition-colors border">
+                    <td className="px-8 py-6">No data found</td>
+                  </tr>
+                </>
               ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
+                <>
+                  {data?.map((row) => (
+                    <tr
+                      key={row._id}
+                      className="border-t hover:bg-accent transition-colors border"
+                    >
+                      <td className="px-8 py-6">{row.title}</td>
+                      <td className="px-8 py-6 truncate max-w-[150px]">
+                        {row.html}
+                      </td>
+                      <td className="px-8 py-6 text-center">
+                        <InputDailogBox emailData={row} />
+                      </td>
+                      <td className="px-8 py-6 text-center">
+                        <ConfirmDialog
+                          title={"Warning"}
+                          description={
+                            "Do you really want to delete this email template"
+                          }
+                          confirmLable="Delete"
+                          confirmVarient="destructive"
+                          triggerLabel={"Delete"}
+                          variant="destructive"
+                          triggerIcon={Trash2}
+                          onConfirm={() => handleDelete(row._id)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </>
               )}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
-
-        {/* Dialog */}
-        {selectedEmail && (
-          <InputDailogBox
-            open={!!selectedEmail}
-            setOpen={() => setSelectedEmail(null)}
-            emailData={selectedEmail}
-          />
-        )}
       </div>
     </DashboardPage>
   );
 }
+
+export default ListEmail;

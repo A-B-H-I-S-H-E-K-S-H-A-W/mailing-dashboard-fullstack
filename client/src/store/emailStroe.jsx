@@ -29,7 +29,6 @@ const useEmailStore = create(
 
           if (res.data.success) {
             set({ results: res.data.results });
-            console.log(res.data);
           } else {
             console.log("No success");
           }
@@ -62,6 +61,50 @@ const useEmailStore = create(
             return res.data;
           }
         } catch (error) {
+          return error.response?.data;
+        }
+      },
+      fetchEmail: async () => {
+        try {
+          const token = useUserStore.getState().token;
+          const res = await axios.get(`${API_BASE}/api/v1/email/fetch`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (res.data.success) {
+            console.log("Email fetched successfully");
+            return res.data;
+          } else {
+            console.log("Error fetching email");
+            return res.data;
+          }
+        } catch (error) {
+          console.log("Error fetching email", error);
+          return error.response?.data;
+        }
+      },
+      deleteEmail: async (id) => {
+        try {
+          const token = useUserStore.getState().token;
+
+          const res = await axios.delete(`${API_BASE}/api/v1/email/delete`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            data: { id },
+          });
+
+          if (res.data.success) {
+            console.log("Email deleted successfully");
+            return res.data;
+          } else {
+            console.log("Error deleting email");
+            return res.data;
+          }
+        } catch (error) {
+          console.log("Error fetching email", error);
           return error.response?.data;
         }
       },

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createEmail,
+  deleteEmail,
   fetchEmail,
   sendEmail,
 } from "../controllers/email.controller.js";
@@ -10,4 +11,5 @@ export const emailRouter = Router();
 
 emailRouter.post("/send-email", authenticate(), sendEmail);
 emailRouter.post("/create", authenticate(), createEmail);
-emailRouter.get("/fetchEmail", authenticate(), fetchEmail);
+emailRouter.get("/fetch", authenticate(), fetchEmail);
+emailRouter.delete("/delete", authenticate(), deleteEmail);

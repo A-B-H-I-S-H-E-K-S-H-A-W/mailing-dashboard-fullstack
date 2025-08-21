@@ -15,11 +15,9 @@ import { OneInputDailogBox } from "../components/ui/OneInputDailogBox";
 const SendEmail = () => {
   const editorRef = useRef(null);
   const sendEmail = useEmailStore((state) => state.sendEmail);
-  const saveEmail = useEmailStore((state) => state.saveEmail);
   const results = useEmailStore((state) => state.results);
   const user = useUserStore((state) => state.user);
   const loading = useUserStore((state) => state.loading);
-  const loadingEmail = useEmailStore((state) => state.loadingEmail);
   const [subject, setSubject] = useState("");
   const [recipient, setRecipient] = useState("");
   const [recipients, setRecipients] = useState([]);
@@ -62,7 +60,6 @@ const SendEmail = () => {
           navigate
         );
       }
-      console.log(results);
     } catch (error) {
       console.log("Error sending email :::::", error);
       ToasterMain("Failed to send email", "Error", false);

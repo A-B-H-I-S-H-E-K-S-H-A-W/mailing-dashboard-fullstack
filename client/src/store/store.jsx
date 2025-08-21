@@ -41,8 +41,6 @@ const useUserStore = create(
             loading: false,
           });
           return error.response?.data;
-        } finally {
-          clearTimeout(timeout); // prevent auto-reset if already handled
         }
       },
 

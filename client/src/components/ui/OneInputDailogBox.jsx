@@ -16,11 +16,13 @@ import Loader from "./Loader";
 import useEmailStore from "../../store/emailStroe";
 import { ToasterMain } from "../Toaster";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../../store/store";
 
 export function OneInputDailogBox({ editorRef }) {
   const [title, setTitle] = useState("");
   const saveEmail = useEmailStore((state) => state.saveEmail);
   const loadingEmail = useEmailStore((state) => state.loadingEmail);
+  const token = useUserStore((state) => state.token);
   const navigate = useNavigate();
 
   const handleSaveEmail = async () => {
@@ -36,9 +38,9 @@ export function OneInputDailogBox({ editorRef }) {
         });
       });
 
-      const response = await saveEmail(html, title);
+      const response = await saveEmail(html, title, token);
 
-      if (response.success) {
+      if (response?.success) {
         ToasterMain(
           response?.message,
           "Email saved successfully",

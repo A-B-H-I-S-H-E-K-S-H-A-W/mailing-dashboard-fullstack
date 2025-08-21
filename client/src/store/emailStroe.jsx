@@ -2,6 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 import { persist } from "zustand/middleware";
 import { API_BASE } from "../constants/ApiUrl";
+import useUserStore from "./store";
 
 const useEmailStore = create(
   persist(
@@ -10,12 +11,21 @@ const useEmailStore = create(
       loadingEmail: false,
       sendEmail: async (subject, to, html, admin) => {
         try {
-          const res = await axios.post(`${API_BASE}/api/v1/email/send-email`, {
-            subject,
-            to,
-            html,
-            admin,
-          });
+          const token = useUserStore.getState().token;
+          const res = await axios.post(
+            `${API_BASE}/api/v1/email/send-email`,
+            {
+              subject,
+              to,
+              html,
+              admin,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
           if (res.data.success) {
             set({ results: res.data.results });
@@ -28,12 +38,21 @@ const useEmailStore = create(
           return error.response?.data;
         }
       },
-      saveEmail: async (html) => {
+      saveEmail: async (html, title) => {
         try {
-          const res = await axios.post(`${API_BASE}/api/v1/email/create`, {
-            html,
-            title,
-          });
+          const token = useUserStore.getState().token;
+          const res = await axios.post(
+            `${API_BASE}/api/v1/email/create`,
+            {
+              html,
+              title,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
           if (res.data.success) {
             console.log("Email saved successfully");

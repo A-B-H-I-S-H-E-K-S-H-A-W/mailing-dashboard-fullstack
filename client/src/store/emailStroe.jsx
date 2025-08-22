@@ -9,7 +9,7 @@ const useEmailStore = create(
     (set) => ({
       results: null,
       loadingEmail: false,
-      sendEmail: async (subject, to, html, admin) => {
+      sendEmail: async (subject, to, html, admin, files) => {
         try {
           const token = useUserStore.getState().token;
           const res = await axios.post(
@@ -19,6 +19,7 @@ const useEmailStore = create(
               to,
               html,
               admin,
+              files,
             },
             {
               headers: {

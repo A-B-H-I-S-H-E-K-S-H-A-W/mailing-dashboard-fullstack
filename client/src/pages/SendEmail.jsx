@@ -11,11 +11,12 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../components/ui/Loader";
 import { InputDailogBox } from "../components/ui/InputDailogBox";
 import { OneInputDailogBox } from "../components/ui/OneInputDailogBox";
+import { InputFile } from "../components/ui/InputFile";
 
 const SendEmail = () => {
   const editorRef = useRef(null);
   const sendEmail = useEmailStore((state) => state.sendEmail);
-  const results = useEmailStore((state) => state.results);
+  const [attachments, setAttachments] = useState([]);
   const user = useUserStore((state) => state.user);
   const loading = useUserStore((state) => state.loading);
   const [subject, setSubject] = useState("");
@@ -40,7 +41,8 @@ const SendEmail = () => {
         subject,
         recipients,
         html,
-        user?.username
+        user?.username,
+        attachments
       );
 
       if (response.success) {
@@ -144,6 +146,10 @@ const SendEmail = () => {
                   </button>
                 </span>
               ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <InputFile onFilesChange={setAttachments} />
             </div>
           </div>
 

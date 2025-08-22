@@ -1,10 +1,12 @@
 import { Admin } from "../models/admin.model.js";
 import { Email } from "../models/email.model.js";
 import { sendAdminEmail } from "../services/emailAdmin.js";
+import { UnLinkFiles } from "../utils/UnLinkFiles.js";
+import { UploadFiles } from "../utils/UploadFiles.js";
 
 export async function sendEmail(req, res) {
   try {
-    const { subject, to, html, admin } = req.body;
+    const { subject, to, html, admin, files } = req.body;
 
     if (!Array.isArray(to) || to.length === 0) {
       return res.status(400).json({
@@ -17,7 +19,16 @@ export async function sendEmail(req, res) {
 
     for (const recipient of to) {
       try {
-        const response = await sendAdminEmail(recipient, subject, html, admin);
+        const savedFiles = await UploadFiles(files);
+        const response = await sendAdminEmail(
+          recipient,
+          subject,
+          html,
+          admin,
+          savedFiles
+        );
+
+        await UnLinkFiles(savedFiles);
         results.push({ recipient, ...response });
       } catch (err) {
         results.push({

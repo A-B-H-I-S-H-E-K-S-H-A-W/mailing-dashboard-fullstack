@@ -30,7 +30,13 @@ function createTransporter(email, pass) {
   });
 }
 
-export async function sendAdminEmail(to, subject, html, adminName) {
+export async function sendAdminEmail(
+  to,
+  subject,
+  html,
+  adminName,
+  attachments
+) {
   try {
     if (!to || !adminName) {
       throw new Error("Email and Admin Name are required");
@@ -51,6 +57,10 @@ export async function sendAdminEmail(to, subject, html, adminName) {
       to,
       subject,
       html,
+      attachments: attachments.map((file) => ({
+        filename: file.filename,
+        path: file.path,
+      })),
     };
 
     const info = await transporter.sendMail(emailOptions);

@@ -17,9 +17,11 @@ import useEmailStore from "../../store/emailStroe";
 import { ToasterMain } from "../Toaster";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
+import { InputFile } from "./InputFile";
 
 export function InputDailogBox({ emailData }) {
   const loading = useUserStore((state) => state.loading);
+  const [attachments, setAttachments] = useState([]);
   const sendEmail = useEmailStore((state) => state.sendEmail);
   const user = useUserStore((state) => state.user);
   const [subject, setSubject] = useState("");
@@ -35,7 +37,8 @@ export function InputDailogBox({ emailData }) {
         subject,
         recipients,
         emailData?.html,
-        user.username
+        user.username,
+        attachments
       );
 
       if (response.success) {
@@ -130,6 +133,9 @@ export function InputDailogBox({ emailData }) {
                 </button>
               </span>
             ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <InputFile onFilesChange={setAttachments} />
           </div>
         </div>
 

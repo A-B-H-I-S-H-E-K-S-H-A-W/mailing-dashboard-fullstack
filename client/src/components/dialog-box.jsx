@@ -41,7 +41,7 @@ export function ConfirmDialog({
             <Button variant="outline">{cancelLabel}</Button>
           </DialogClose>
           <Button onClick={onConfirm} variant={confirmVariant} type="button">
-            {loading ? <Loader /> : { confirmLabel }}
+            {loading ? <Loader /> : confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>

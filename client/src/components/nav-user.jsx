@@ -70,11 +70,11 @@ export function NavUser({ user }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <ConfirmDialog
-              title={"Warning"}
-              description={"Do you really want to logout"}
-              confirmLable="Logout"
-              confirmVarient="destructive"
-              triggerLabel={"Log out"}
+              title="Warning"
+              description="Do you really want to logout"
+              confirmLabel="Logout"
+              confirmVariant="destructive"
+              triggerLabel="Log out"
               triggerIcon={LogOut}
               onConfirm={handleLogout}
             />

@@ -11,15 +11,18 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../components/ui/Loader";
 import { InputDailogBox } from "../components/ui/InputDailogBox";
 import { OneInputDailogBox } from "../components/ui/OneInputDailogBox";
+import Switch from "@/components/ui/switch";
 import { InputFile } from "../components/ui/InputFile";
 
 const SendEmail = () => {
   const editorRef = useRef(null);
   const sendEmail = useEmailStore((state) => state.sendEmail);
+  const sendZohoMail = useEmailStore((state) => state.sendZohoMail);
   const [attachments, setAttachments] = useState([]);
   const user = useUserStore((state) => state.user);
   const loading = useUserStore((state) => state.loading);
   const [subject, setSubject] = useState("");
+  const [isZoho, setIsZoho] = useState(false);
   const [recipient, setRecipient] = useState("");
   const [recipients, setRecipients] = useState([]);
   const navigate = useNavigate();
@@ -37,27 +40,42 @@ const SendEmail = () => {
         });
       });
 
-      const response = await sendEmail(
-        subject,
-        recipients,
-        html,
-        user?.username,
-        attachments
-      );
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-      if (response.success) {
-        ToasterMain(
-          response?.message,
-          "Email sent Successfully",
-          response?.success,
-          "/logs",
-          navigate
-        );
+      if (isZoho) {
+        for (const recipient of recipients) {
+          const res = await sendZohoMail(
+            subject,
+            recipient,
+            html,
+            user?.username,
+            attachments
+          );
+
+          ToasterMain(
+            res?.message || "Failed to send email",
+            res?.success ? "Email sent Successfully" : "Failed to send email",
+            res?.success,
+            "/logs",
+            navigate
+          );
+
+          await delay(5000);
+        }
       } else {
+        const res = await sendEmail(
+          subject,
+          recipients,
+          html,
+          user?.username,
+          attachments
+        );
+
+        // Show toaster for non-Zoho emails
         ToasterMain(
-          response?.message,
-          "Falied to send email",
-          response?.success,
+          res?.message || "Failed to send email",
+          res?.success ? "Email sent Successfully" : "Failed to send email",
+          res?.success,
           "/logs",
           navigate
         );
@@ -90,6 +108,13 @@ const SendEmail = () => {
       <DashboardPage>
         <div className="flex flex-col gap-4 p-4 flex-1">
           <Label className="text-4xl py-5">Write a new email</Label>
+
+          <div className="grid gap-3">
+            <div className="flex items-center space-x-2 mb-5">
+              <Switch id="zoho" checked={isZoho} onCheckedChange={setIsZoho} />
+              <Label htmlFor="zoho">Send from Zoho</Label>
+            </div>
+          </div>
 
           {/* Subject */}
           <div className="grid gap-3">

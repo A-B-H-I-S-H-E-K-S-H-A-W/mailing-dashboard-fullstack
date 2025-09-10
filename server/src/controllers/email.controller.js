@@ -1,6 +1,7 @@
 import { Admin } from "../models/admin.model.js";
 import { Email } from "../models/email.model.js";
 import { sendAdminEmail } from "../services/emailAdmin.js";
+import { sendAdminZohoEmail } from "../services/zohoEmail.js";
 import { UnLinkFiles } from "../utils/UnLinkFiles.js";
 import { UploadFiles } from "../utils/UploadFiles.js";
 
@@ -39,6 +40,41 @@ export async function sendEmail(req, res) {
       }
     }
 
+    return res.status(200).json({
+      success: true,
+      message: "Emails processed",
+      results,
+    });
+  } catch (error) {
+    console.error("Error sending email", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
+export async function sendZohoMail(req, res) {
+  try {
+    const { subject, recipient, html, admin, files } = req.body;
+
+    if (!recipient) {
+      return res.status(400).json({
+        success: false,
+        message: "Recipient is required!",
+      });
+    }
+
+    const savedFiles = await UploadFiles(files);
+    const response = await sendAdminZohoEmail(
+      recipient,
+      subject,
+      html,
+      admin,
+      savedFiles
+    );
+
+    await UnLinkFiles(savedFiles);
     return res.status(200).json({
       success: true,
       message: "Emails processed",

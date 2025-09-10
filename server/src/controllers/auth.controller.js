@@ -30,8 +30,6 @@ export async function register(req, res) {
         const hashedPassword = await Encrypt(u.password);
         await Admin.create({ ...u, password: hashedPassword });
         console.log("Admin Created");
-      } else {
-        console.log("Admin already exists");
       }
     }
   } catch (error) {

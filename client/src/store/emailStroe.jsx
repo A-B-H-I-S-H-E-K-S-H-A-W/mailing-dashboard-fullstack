@@ -38,6 +38,35 @@ const useEmailStore = create(
           return error.response?.data;
         }
       },
+      sendZohoMail: async (subject, recipient, html, admin, files) => {
+        let res = null;
+        try {
+          const token = useUserStore.getState().token;
+
+          res = await axios.post(
+            `${API_BASE}/api/v1/email/send-zoho-email`,
+            {
+              subject,
+              recipient,
+              html,
+              admin,
+              files,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        } catch (error) {
+          return error.response?.data;
+        }
+        if (res.data.success) {
+          return res.data;
+        } else {
+          console.log("No success");
+        }
+      },
       saveEmail: async (html, title) => {
         try {
           const token = useUserStore.getState().token;

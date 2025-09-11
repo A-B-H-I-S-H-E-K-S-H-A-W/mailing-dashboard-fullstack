@@ -75,10 +75,17 @@ export async function sendZohoMail(req, res) {
     );
 
     await UnLinkFiles(savedFiles);
+
+    if (!response.success) {
+      return res.status(500).json({
+        success: false,
+        message: response.message, // “Failed to send email”
+      });
+    }
+
     return res.status(200).json({
       success: true,
-      message: "Emails processed",
-      results,
+      message: response.message, // “Email sent successfully...”
     });
   } catch (error) {
     console.error("Error sending email", error);

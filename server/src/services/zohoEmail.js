@@ -57,7 +57,7 @@ export async function sendAdminZohoEmail(
       to,
       subject,
       html,
-      attachments: attachments.map((file) => ({
+      attachments: (attachments || []).map((file) => ({
         filename: file.filename,
         path: file.path,
       })),

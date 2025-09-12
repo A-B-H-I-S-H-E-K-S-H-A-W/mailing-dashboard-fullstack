@@ -15,6 +15,7 @@ import {
 import useUserStore from "../store/store";
 
 export function AppSidebar({ ...props }) {
+  const loading = useUserStore((state) => state.loading);
   const user = useUserStore((state) => state.user);
 
   const data = {
@@ -77,8 +78,12 @@ export function AppSidebar({ ...props }) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavProjects projects={data.navMain} disabled={loading} />
+        <NavSecondary
+          items={data.navSecondary}
+          className="mt-auto"
+          disabled={loading}
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

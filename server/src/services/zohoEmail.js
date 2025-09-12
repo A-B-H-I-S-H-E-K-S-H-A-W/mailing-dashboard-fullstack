@@ -66,7 +66,7 @@ export async function sendAdminZohoEmail(
     const info = await transporter.sendMail(emailOptions);
 
     return {
-      message: `Email sent successfully to ${to}`,
+      message: `Email sent successfully to ${to} ${info}`,
       success: true,
     };
   } catch (error) {

@@ -62,6 +62,7 @@ const useEmailStore = create(
           return error.response?.data;
         }
         if (res.data.success) {
+          set({ results: res.data.results });
           return res.data;
         } else {
           console.log("No success");

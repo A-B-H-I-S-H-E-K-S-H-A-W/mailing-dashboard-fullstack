@@ -20,7 +20,7 @@ const admins = {
 
 function createTransporter(email, pass) {
   return nodemailer.createTransport({
-    host: "smtp.zoho.com",
+    host: "smtp.zoho.in",
     port: 465,
     secure: true,
     auth: {

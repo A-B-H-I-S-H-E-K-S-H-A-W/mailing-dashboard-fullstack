@@ -85,7 +85,8 @@ export async function sendZohoMail(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: response.message, // “Email sent successfully...”
+      message: response.message,
+      results: response,
     });
   } catch (error) {
     console.error("Error sending email", error);
